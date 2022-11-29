@@ -1,0 +1,113 @@
+﻿@using WebApplication.ViewModels
+@model CoursesViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Курсы</h1>
+
+@using (Html.BeginForm("Index", "Courses", FormMethod.Post))
+{
+    <fieldset>
+        Размер группы:
+        <input type="number" name="searchSize" value="@ViewData["searchSize"]" />
+        Количество часов:
+        <input type="number" name="searchHours" value="@ViewData["searchHours"]" />
+        <input type="submit" value="Найти" />
+        <a asp-action="Index"
+       asp-route-resetFilter="@true"
+       asp-route-page="@Model.PageViewModel.PageNumber"
+       asp-route-pageSize="@Model.PageViewModel.PageSize"
+       class="btn btn-danger">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Сброс фильтра
+        </a>
+    </fieldset>
+}
+
+@await Html.PartialAsync("_PageButtons", Model.PageViewModel)
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Name">
+                Название
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Program">
+                Программа обучения
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Description">
+                Описание
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Intensity">
+                Интенсивность занятий
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.GroupSize">
+                Размер группы
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Vacancies">
+                Количество свободных мест
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Hours">
+                Количество часов
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Cost">
+                Стоимость
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Courses) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Program)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Intensity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroupSize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VacanciesNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HoursNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cost)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Подробности</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

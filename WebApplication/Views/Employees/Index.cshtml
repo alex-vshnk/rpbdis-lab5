@@ -1,0 +1,86 @@
+﻿@using WebApplication.ViewModels
+@model EmployeesViewModel
+
+@{
+    ViewData["Title"] = "Сотрудники";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Список сотрудников</h1>
+
+<p>
+    <a asp-action="Create">Добавить сотрудника</a>
+</p>
+
+@using (Html.BeginForm("Index", "Employees", FormMethod.Post))
+{
+    <fieldset>
+        Фамилия:
+        <input type="text" name="searchSurname" value="@ViewData["searchSurname"]?.ToString()" />
+        Должность:
+        <input type="text" name="searchPosition" value="@ViewData["searchPosition"]?.ToString()" />
+        <input type="submit" value="Найти" />
+        <a asp-action="Index"
+       asp-route-resetFilter="@true"
+       asp-route-page="@Model.PageViewModel.PageNumber"
+       asp-route-pageSize="@Model.PageViewModel.PageSize"
+       class="btn btn-danger">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Сброс фильтра
+        </a>
+    </fieldset>
+}
+
+@await Html.PartialAsync("_PageButtons", Model.PageViewModel)
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.FirstName">
+                    @Html.DisplayNameFor(model => model.Employees.FirstOrDefault().FirstName)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Surname">
+                    @Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Surname)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Patronymic">
+                    @Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Patronymic)
+                </a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Position">
+                    @Html.DisplayNameFor(model => model.Employees.FirstOrDefault().Position.Name)
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Employees)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Patronymic)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Подробности</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

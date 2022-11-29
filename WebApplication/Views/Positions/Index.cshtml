@@ -1,0 +1,60 @@
+﻿@using WebApplication.ViewModels
+@model PositionsViewModel
+
+@{
+    ViewData["Title"] = "Должности";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Список должностей</h1>
+
+<p>
+    <a asp-action="Create">Добавить должность</a>
+</p>
+
+@using (Html.BeginForm("Index", "Positions", FormMethod.Post))
+{
+    <fieldset>
+        Должность:
+        <input type="text" name="searchPosition" value="@ViewData["searchPosition"]?.ToString()" />
+        <input type="submit" value="Найти" />
+        <a asp-action="Index"
+       asp-route-resetFilter="@true"
+       asp-route-page="@Model.PageViewModel.PageNumber"
+       asp-route-pageSize="@Model.PageViewModel.PageSize"
+       class="btn btn-danger">
+            <i class="glyphicon glyphicon-chevron-left"></i>
+            Сброс фильтра
+        </a>
+    </fieldset>
+}
+
+@await Html.PartialAsync("_PageButtons", Model.PageViewModel)
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.Name">
+                    Название
+                </a>
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Positions)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Изменить</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Подробности</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
